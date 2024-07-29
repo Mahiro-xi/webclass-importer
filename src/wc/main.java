@@ -1,11 +1,9 @@
 
 package wc;
 
-import java.io.IOException;
-
 public class main {
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		System.out.println("Webclass-importer");
 		for(int i=0;i<3;i++) {
 			System.out.println(dependsChecker.checkAll()[i]);

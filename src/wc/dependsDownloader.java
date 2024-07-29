@@ -1,50 +1,73 @@
 package wc;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
 public class dependsDownloader {
-	
-	public static void someget() throws IOException {
-		ObjectMapper objectmapper = new ObjectMapper();
-		JsonNode json = objectmapper.readTree(get());
-//		@SuppressWarnings("deprecation")
-//		URL url = new URL("https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json");
-		
-//        Object obj = ObjectMapper.readValue(url, Object.class); -> Error code.
 
-        // マッピングされたオブジェクトを使用
-		String version = json.get("version").textValue();
-		System.out.println(version);
-	}
 	
-//	public static void chromeDL() {}
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	    private String timestamp;
+	    private Map<String, Channel> channels;
+
+	    public String getTimestamp() {
+	        return timestamp;
+	    }
+
+	    public void setTimestamp(String timestamp) {
+	        this.timestamp = timestamp;
+	    }
+
+	    public Map<String, Channel> getChannels() {
+	        return channels;
+	    }
+
+	    public void setChannels(Map<String, Channel> channels) {
+	        this.channels = channels;
+	    }
 	
-	
-	public static String get() {
-		String url = "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json";
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest req = HttpRequest.newBuilder()
-				.uri(URI.create(url))
-				.GET()
-				.build();
+	public static StringBuffer getjson() throws Exception{
+		URL url = new URL("https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json");
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.connect();
+		
+		int responseCode = conn.getResponseCode();
+		if(responseCode != 200) {
+			throw new RuntimeException("HttpResponseCode: " + responseCode);
+		} else {
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				content.append(inputLine);
+			}
 			
-		try {
-			HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
-//			System.out.println(res);
-//			System.out.println(res.body());
-			return res.body();
-		} catch ( IOException | InterruptedException ex ) {
-			ex.printStackTrace();
-			return "invalid";
+			in.close();
+			conn.disconnect();
+			return content;
 		}
+		
+		}
+	
+	public static void someget() throws Exception {
+			try {
+	            ObjectMapper mapper = new ObjectMapper();
+	            String jsonString = getjson().toString();
+	            
+	            dependsDownloader downloader = mapper.readValue(jsonString, dependsDownloader.class);
+
+	            // デシリアライズ結果の確認
+	            System.out.println("Timestamp: " + downloader.getTimestamp());
+	            System.out.println("Stable Channel Version: " + downloader.getChannels().get("Stable").getVersion());
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
 	}
-}	
+}
