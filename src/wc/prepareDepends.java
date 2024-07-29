@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 
 
 public class prepareDepends {
-	public static void prepare() {
+	public static void prepare(boolean[] status) {
 		String url = "https://googlechromelabs.github.io/chrome-for-testing/#stable";
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest req = HttpRequest.newBuilder()

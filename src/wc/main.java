@@ -10,6 +10,10 @@ public class main {
 		for(int i=0;i<3;i++) {
 			System.out.println(dependsChecker.checkAll()[i]);
 		}
+//		prepareDepends.prepare(dependsChecker.checkAll());
+		System.out.println(osChecker.whos());
+		
+		dependsDownloader.someget();
 	}
 
 }
