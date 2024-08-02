@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class dependsChecker {
+public class DependsChecker {
 	static boolean init() throws IOException {
 		Path p = Paths.get( "./depends");
 		
@@ -19,7 +19,7 @@ public class dependsChecker {
 	}
 	
 	static boolean[] checkList = {false,false,false};
-	public static void checkdo(Path webdriver,Path chrome){
+	public static void checkdo(Path webdriver,Path chrome) throws Exception{
 		// Chromeの存在確認
 		if(Files.exists(chrome)) {
 			checkList[1] = true;
@@ -33,10 +33,10 @@ public class dependsChecker {
 	}
 	
 	// Chrome, WebDriver二点セット確認くん
-	public static boolean[] checkAll() throws IOException {
-		if (osChecker.whos().equals("win")) {
-			Path webdriver = Paths.get("./depends/webdriver.exe");
-			Path chrome = Paths.get("./depends/chrome.exe");
+	public static boolean[] checkAll() throws Exception {
+		if (OsChecker.whos().equals("win")) {
+			Path webdriver = Paths.get("./depends/chromedriver-win64/chromedriver.exe");
+			Path chrome = Paths.get("./depends/chrome-win64/chrome.exe");
 			checkdo(webdriver, chrome);
 		}else{
 			Path webdriver = Paths.get("./depends/webdriver");

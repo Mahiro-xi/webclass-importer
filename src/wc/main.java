@@ -5,13 +5,14 @@ public class main {
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("Webclass-importer");
-		for(int i=0;i<3;i++) {
-			System.out.println(dependsChecker.checkAll()[i]);
+		if (!DependsChecker.checkAll()[1]) {
+			PrepareDepends.download("chrome",VersionChecker.getVer());
 		}
-//		prepareDepends.prepare(dependsChecker.checkAll());
-		System.out.println(osChecker.whos());
 		
-		dependsDownloader.someget();
+		if (!DependsChecker.checkAll()[2]) {
+			PrepareDepends.download("chromedriver", VersionChecker.getVer());
+			
+		}
+		
 	}
-
 }

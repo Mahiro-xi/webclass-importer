@@ -10,7 +10,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class dependsDownloader {
+public class VersionChecker {
 
 	
 	@JsonIgnoreProperties(ignoreUnknown = true)
@@ -57,18 +57,20 @@ public class dependsDownloader {
 	        }
 	    }
 	
-	public static void someget() throws Exception {
+	public static String getVer() throws Exception {
 			try {
 	            ObjectMapper mapper = new ObjectMapper();
 	            String jsonString = getjson().toString();
 	            
-	            dependsDownloader downloader = mapper.readValue(jsonString, dependsDownloader.class);
+	            VersionChecker downloader = mapper.readValue(jsonString, VersionChecker.class);
 
-	            // デシリアライズ結果の確認
-	            System.out.println("Timestamp: " + downloader.getTimestamp());
-	            System.out.println("Stable Channel Version: " + downloader.getChannels().get("Stable").getVersion());
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+//	            System.out.println("Timestamp: " + downloader.getTimestamp());
+//	            System.out.println("Stable Channel Version: " + downloader.getChannels().get("Stable").getVersion());
+	            return downloader.getChannels().get("Stable").getVersion().toString();
+	           
+		  } catch (Exception e) {
+		            e.printStackTrace();
+		            return null;
+		  			}
 	}
 }
